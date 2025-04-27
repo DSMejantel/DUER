@@ -1,0 +1,34 @@
+{
+    "component": "shell",
+    "title": "DUER",
+    "link": "/",
+    "icon": "messages",
+    "favicon":"/favicon.ico",
+    "language":"fr-FR",
+    "layout": "fluid",
+    "norobot": "TRUE",
+    "menu_item": [
+         {"title": "Responsables", "submenu": [
+            {"link": "/comptes/comptes.sql", "title": "Liste"},
+            {"link": "/comptes/comptes_ajout.sql", "title": "Ajouter"}
+        ]},
+         {"title": "Agents", "link": "/agent.sql"},
+         {"title": "Unités de travail", "submenu": [
+            {"link": "/unite.sql", "title": "Liste"},
+            {"link": "/unite_ajout.sql", "title": "Ajouter"}
+        ]},
+        {"title": "Risques", "link": "/risque.sql"},
+         {"title": "Actions", "submenu": [
+            {"link": "/actions.sql", "title": "Liste globale"},
+            {"link": "/actions_responsables.sql", "title": "par responsable"},
+            {"link": "/actions_agents.sql", "title": "par agent"},
+            {"link": "/actions_unites.sql", "title": "par unité"}
+        ]},
+        {"title": "Paramètres", "submenu": [
+            {"link": "/param_tables.sql", "title": "Légende des couleurs"}
+        ]},
+        {"title": "Mon compte", "submenu": [
+            {"link": "/comptes/logout.sql", "title": "Se déconnecter"}
+        ]}
+    ]
+}

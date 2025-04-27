@@ -1,0 +1,13 @@
+{
+    "component": "shell",
+    "title": "DUER",
+    "link": "/",
+    "icon": "messages",
+    "favicon":"/favicon.ico",
+    "language":"fr-FR",
+    "layout": "fluid",
+    "norobot": "TRUE",
+    "menu_item": [
+    {"link": "/comptes/signin.sql", "title": "Connexion"}
+    ]
+}
