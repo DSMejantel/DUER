@@ -81,8 +81,8 @@ END as Fin,
     ![](../icons/pencil.svg)
 ](action_edit.sql?id='||$id||'&fiche='||id||')
 [
-    ![](../icons/eye.svg)
-](action_view.sql?id='||$id||'&fiche='||id||')' as Actions
+    ![](../icons/files.svg)
+](risque_fiche.sql?id='||$id||')' as Actions
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$fiche;
     
 select 'text' as component,
