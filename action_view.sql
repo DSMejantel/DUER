@@ -54,6 +54,7 @@ SELECT
     'table' as component,
     'État' as markdown,
     'Fin' as markdown,
+    'Actions' as markdown,
     'Description' as markdown,
     TRUE    as small;
 SELECT
@@ -62,28 +63,29 @@ SELECT
     --description as Description,
     SUBSTR(prenom, 1, 1) ||'. '||nom as Responsable,
     '[
-    ![](/icons/percentage-'||avancement||'.svg)]()
-     ' as État,
+    ![](/icons/arrow-back.svg)
+](/avancement/view_recule.sql?id='||$id||'&fiche='||id||' "Reculer dans le processus")
+     [![](/icons/percentage-'||avancement||'.svg)](risque_fiche.sql?id='||$id||' "'||avancement||'%")
+     [
+    ![](/icons/arrow-forward.svg)
+](/avancement/view_avance.sql?id='||$id||'&fiche='||id||' "Avancer dans le processus")' as État,
     CASE WHEN etat=1
     THEN '[
     ![](./icons/select.svg)
-]()' 
+](/avancement/view_ouvert.sql?id='||$id||'&fiche='||id||')' 
 ELSE '[
     ![](./icons/square.svg)
-]()' 
-END as Fin
+](/avancement/view_ferme.sql?id='||$id||'&fiche='||id||')' 
+END as Fin,
+    '[
+    ![](../icons/pencil.svg)
+](action_edit.sql?id='||$id||'&fiche='||id||')
+[
+    ![](../icons/eye.svg)
+](action_view.sql?id='||$id||'&fiche='||id||')' as Actions
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$fiche;
     
--- formulaire modification fiche action
-SELECT 
-    'form' as component,
-    'Mise à jour :' as title,
-    'Mettre à jour' as validate,
-    'action_edit_confirm.sql?id='||$id||'&fiche='||$fiche as action,
-    'green' as validate_color;
-SELECT  TRUE as required, 'Date' AS label, 'creation' AS name, 'date' as type, (select creation FROM actions WHERE id=$fiche) as value, 3 as width;
-    SELECT TRUE as required, 'titre' as name, 'Titre' as label, (select titre FROM actions WHERE id=$fiche) as value, 9 as width;
-    SELECT TRUE as required, 'description' as name, 'Description' as label, 'textarea' as type, (select description FROM actions WHERE id=$fiche) as value, 12 as width;
-    SELECT TRUE as required, 'Responsable' AS label, 'resp' AS name, 'select' as type, 4 as width, (SELECT responsable_id FROM actions WHERE id=$fiche) as value, json_group_array(json_object("label" , prenom||' '||nom, "value", username )) as options FROM (select * FROM user_info WHERE username<>'duer_admin' ORDER BY nom ASC);
-    SELECT TRUE as required, 'Avancement' AS label, 'av' AS name, 'select' as type, 3 as width, (select avancement FROM actions WHERE id=$fiche) as value, '[{"label": "0 %", "value": 0}, {"label": "10 %", "value": 10}, {"label": "20 %", "value": 20},{"label": "30 %", "value": 30}, {"label": "40 %", "value": 40}, {"label": "50 %", "value": 50}, {"label": "60 %", "value": 60}, {"label": "70 %", "value": 70},{"label": "80 %", "value": 80}, {"label": "90 %", "value": 90}, {"label": "100 %", "value": 100}]'  as options;
-    SELECT 'Achèvement' AS label, 'ach' AS name, etat=1 as checked, 1 as value,2 as width, 'checkbox' as type FROM actions WHERE id=$fiche;  
+select 'text' as component,
+    true as article,
+    description as contents_md
+    FROM actions WHERE id=$fiche;

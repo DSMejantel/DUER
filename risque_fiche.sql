@@ -137,7 +137,7 @@ SELECT
     'table' as component,
     'État' as markdown,
     'Fin' as markdown,
-    'Éditer' as markdown,
+    'Actions' as markdown,
     'Description' as markdown,
     TRUE    as hover,
     TRUE    as striped_rows,
@@ -147,7 +147,7 @@ SELECT
     id as _sqlpage_id,
     creation as Date,
     titre as Titre,
-    description as Description,
+    --description as Description,
     SUBSTR(prenom, 1, 1) ||'. '||nom as Responsable,
     '[
     ![](/icons/arrow-back.svg)
@@ -166,7 +166,10 @@ ELSE '[
 END as Fin,
     '[
     ![](../icons/pencil.svg)
-](action_edit.sql?id='||$id||'&fiche='||id||')' as Éditer
+](action_edit.sql?id='||$id||'&fiche='||id||')
+[
+    ![](../icons/eye.svg)
+](action_view.sql?id='||$id||'&fiche='||id||')' as Actions
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE risque_id=$id;
     
     
