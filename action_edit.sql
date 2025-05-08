@@ -72,7 +72,7 @@ ELSE '[
     ![](./icons/square.svg)
 ]()' 
 END as Fin
-    FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$id;
+    FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$fiche;
     
 -- formulaire modification fiche action
 SELECT 
