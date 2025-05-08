@@ -2,6 +2,7 @@ select
     'chart'    as component,
     'Risques recensés' as title,
     'bar'      as type,
+    350 as height,
     TRUE       as stacked,
     TRUE       as toolbar,
     10         as ystep,
