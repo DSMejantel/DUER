@@ -30,6 +30,14 @@ select
     '/dashboard/graph_01.sql?_sqlpage_embed' as embed where $group_id>0;
 select 
     '/dashboard/graph_02.sql?_sqlpage_embed' as embed where $group_id>0;
+    
+select 
+    'card' as component,
+    'Tableau des risques' as title,
+    1      as columns
+    where $group_id>0;
+select 
+    '/dashboard/graph_03.sql?_sqlpage_embed' as embed where $group_id>0;
 
 
 

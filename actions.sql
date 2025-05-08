@@ -15,6 +15,7 @@ sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
 
 SELECT 
     'table' as component,
+    'Description'  as markdown,
     'État' as markdown,
     'Fin' as markdown,
     'Éditer' as markdown,

@@ -35,13 +35,19 @@ SELECT
 --Tableau
 select 
     'table' as component,
-    'Évaluation en fonction de la fréquence et gravité du risque et de sa maîtrise' as description,
+    'Évaluation en fonction de la probabilité et de la gravité du risque et de sa maîtrise' as description,
     'Mineure' as markdown,
     'Significative' as markdown,
     'Grave' as markdown,
     'Critique' as markdown,
+    'Mineure' as align_center,
+    'Significative' as align_center,
+    'Grave' as align_center,
+    'Critique' as align_center,
+        'Fréquence' as align_right,
     TRUE    as hover,
     TRUE    as striped_rows,
+    TRUE as border,
     TRUE    as small;
 select 
     freq as Fréquence,

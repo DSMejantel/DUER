@@ -138,6 +138,7 @@ SELECT
     'État' as markdown,
     'Fin' as markdown,
     'Éditer' as markdown,
+    'Description' as markdown,
     TRUE    as hover,
     TRUE    as striped_rows,
     TRUE    as small,
@@ -165,7 +166,7 @@ ELSE '[
 END as Fin,
     '[
     ![](../icons/pencil.svg)
-](action_edit.sql?id='||id||'&risque='||$id||')' as Éditer
+](action_edit.sql?id='||$id||'&fiche='||id||')' as Éditer
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE risque_id=$id;
     
     

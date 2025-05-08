@@ -3,8 +3,8 @@
     "title": "DUER",
     "link": "/",
     "icon": "messages",
-    "favicon":"/favicon.ico",
-    "language":"fr-FR",
+    "javascript_module": "/rich_text_editor.js",
+    "favicon": "/favicon",
     "layout": "fluid",
     "norobot": "TRUE",
     "menu_item": [

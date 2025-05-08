@@ -5,10 +5,10 @@ SELECT 'redirect' AS component,
 
 
 --Mise à jour de la fiche action
-UPDATE actions SET titre=:titre, description=:description, responsable_id=:resp, avancement=:av, etat=coalesce(:ach,0), creation=:creation WHERE id=$id
+UPDATE actions SET titre=:titre, description=:description, responsable_id=:resp, avancement=:av, etat=coalesce(:ach,0), creation=:creation WHERE id=$fiche
 
 RETURNING
 'redirect' as component,
-'risque_fiche.sql?id='||$risque as link;
+'risque_fiche.sql?id='||$id as link;
 
 

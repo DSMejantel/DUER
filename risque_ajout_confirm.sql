@@ -16,7 +16,7 @@ SET color='red' WHERE CAST($score AS INTEGER)>=75;
 */
 --enregistrement du risque
 INSERT INTO risque(unite_id, type_id, description, gravite, frequence, maitrise, score, color, creation)
-SELECT $id,:type,:description,:grav,:freq,1,$score,$color,:creation;
+SELECT $id,:type,:description,:grav,:freq,4,$score,$color,:creation;
 
 
 -- enregistrement des agents dans une table différente
