@@ -47,5 +47,5 @@ END as Fin,
     ![](/icons/eye.svg)
 ](risque_fiche.sql?id='||actions.risque_id||' "Voir la fiche risque")[
     ![](../icons/pencil.svg)
-](action_edit.sql?id='||actions.id||'&risque='||risque_id||')' as Éditer
+](action_edit.sql?id='||risque_id||'&fiche='||actions.id||')' as Éditer
     FROM actions LEFT JOIN user_info on actions.responsable_id=user_info.username LEFT JOIN risque on actions.risque_id=risque.id;
