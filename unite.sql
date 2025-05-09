@@ -13,9 +13,9 @@ sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
 select 
     'columns' as component;
 select 
-    lieu           as title,
+    lieu as title, 4 as size,
     '[![Risque](/icons/circle-plus.svg)](risque_ajout.sql?id='||unite.id||' "Ajouter") Ajouter un risque'||CHAR(10) || CHAR(10)  as description_md,
-    group_concat('[![Voir](/icons/alert-square-'||risque.color||'.svg)](risque_fiche.sql?id='||risque.id||' "'||risque.score||'/100")[![Voir](/icons/files.svg)](risque_fiche.sql?id='||risque.id||' "Voir")'||risques.nature,  CHAR(10) || CHAR(10)) as description_md,
+    group_concat('[!['||description||'](/icons/alert-square-'||risque.color||'.svg)](risque_fiche.sql?id='||risque.id||' "'||risque.score||'/100")[!['||description||'](/icons/files.svg)](risque_fiche.sql?id='||risque.id||' "'||description||'")'||risques.nature,  CHAR(10) || CHAR(10) ORDER BY score DESC) as description_md,
 
     'unite_tableau.sql' as link,
     'Détails'     as button_text
@@ -27,6 +27,6 @@ select
     lieu as title,
     unite.id as id,
     '[![Risque](/icons/circle-plus.svg)](risque_ajout.sql?id='||unite.id||' "Ajouter") Ajouter [![Détails](/icons/eye.svg)](unite_tableau.sql?id='||unite.id||' "Tableau complet") Tableau'||  CHAR(10) || CHAR(10)||
-    group_concat('RISQUE : '||risques.nature||' --> maîtrise : '||maitrise.maitr||'[![Voir](/icons/eye.svg)](risque_fiche.sql?id='||risque.id||' "Voir")',  CHAR(10) || CHAR(10)) as description_md
+    group_concat('RISQUE : '||risques.nature||' --> maîtrise : '||maitrise.maitr||'[!['||description||'](/icons/eye.svg)](risque_fiche.sql?id='||risque.id||' "'||description||'")',  CHAR(10) || CHAR(10)) as description_md
     FROM unite LEFT JOIN risque on unite.id=risque.unite_id LEFT JOIN risques on risque.type_id=risques.id LEFT JOIN maitrise on risque.maitrise=maitrise.id GROUP by unite.id;
 */

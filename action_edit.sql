@@ -31,7 +31,7 @@ select
     'Évaluation' as title,
     'Description : '||description as item,
     'Gravité : '||grav as item,
-    'Fréquence : '||freq as item,
+    'Probabilité : '||freq as item,
     'Maîtrise : '||maitr as item,
     color               as button_color,
     'risque_fiche.sql?id='||$id||'&edit=1' as link,

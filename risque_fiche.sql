@@ -43,10 +43,14 @@ select
 select 
     4 as size,
     'Évaluation' as title,
-    'Description : '||description as item,
-    'Gravité : '||grav as item,
-    'Fréquence : '||freq as item,
-    'Maîtrise : '||maitr as item,
+    JSON('{"icon":"files","color":"black","description":"Description : '||description||'"}') as item,
+    JSON('{"icon":"clock-hour-5","color":"'||(CASE WHEN gravite=1 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Gravité : '||grav||'"}') as item,
+    JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
+    JSON('{"icon":"scale","color":"'||(CASE WHEN maitrise=1 THEN 'green' WHEN maitrise=2 THEN 'yellow' WHEN maitrise=3 THEN 'orange' ELSE 'red' END)||'","description":"Maîtrise : '||maitr||'"}') as item,
+    --'Description : '||description as item,
+    --'Gravité : '||grav as item,
+    --'Probabilité : '||freq as item,
+    --'Maîtrise : '||maitr as item,
     color               as button_color,
     'risque_fiche.sql?id='||$id||'&edit=1' as link,
     'Modifier'     as button_text
@@ -108,7 +112,7 @@ SELECT
    
     SELECT 'Gravité' AS label, 'grav' AS name, 'select' as type, 2 as width, (SELECT risque.gravite FROM risque WHERE risque.id=$id) as value, json_group_array(json_object("label" , grav, "value", vgrav )) as options FROM (select grav,vgrav FROM gravite ORDER BY vgrav ASC) WHERE $edit=1;
     
-    SELECT 'Fréquence' AS label, 'freq' AS name, 'select' as type, 2 as width,(SELECT risque.frequence FROM risque WHERE risque.id=$id) as value, json_group_array(json_object("label" , freq, "value", vfreq )) as options FROM (select freq,vfreq FROM frequence ORDER BY vfreq ASC) WHERE $edit=1;
+    SELECT 'Probabilité' AS label, 'freq' AS name, 'select' as type, 2 as width,(SELECT risque.frequence FROM risque WHERE risque.id=$id) as value, json_group_array(json_object("label" , freq, "value", vfreq )) as options FROM (select freq,vfreq FROM frequence ORDER BY vfreq ASC) WHERE $edit=1;
     
     SELECT TRUE as required, 'description' as name,(SELECT description FROM risque WHERE risque.id=$id) as value,  'Description' as label, 8 as width WHERE $edit=1;
 
@@ -139,6 +143,7 @@ SELECT
     'Fin' as markdown,
     'Actions' as markdown,
     'Description' as markdown,
+    'Aucune fiche saisie' as empty_description,
     TRUE    as hover,
     TRUE    as striped_rows,
     TRUE    as small,

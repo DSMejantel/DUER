@@ -28,6 +28,6 @@ SELECT
     SELECT TRUE as required, 'Catégorie' AS label, 'type' AS name, 'select' as type, 9 as width, 'Choisir la nature du risque' as empty_option, json_group_array(json_object("label" , nature, "value", id )) as options FROM (select * FROM risques ORDER BY nature ASC);
     SELECT TRUE as required, 'description' as name, 'Description' as label, 12 as width;
         SELECT TRUE as required, 'Gravité' AS label, 'grav' AS name, 'select' as type, 2 as width, 'Choisir' as empty_option, json_group_array(json_object("label" , grav, "value", vgrav )) as options FROM (select * FROM gravite ORDER BY vgrav ASC);
-        SELECT TRUE as required, 'Fréquence' AS label, 'freq' AS name, 'select' as type, 2 as width, 'Choisir' as empty_option, json_group_array(json_object("label" , freq, "value", vfreq )) as options FROM (select * FROM frequence ORDER BY vfreq ASC);
+        SELECT TRUE as required, 'Probabilité' AS label, 'freq' AS name, 'select' as type, 2 as width, 'Choisir' as empty_option, json_group_array(json_object("label" , freq, "value", vfreq )) as options FROM (select * FROM frequence ORDER BY vfreq ASC);
         SELECT  TRUE as readonly,'Maîtrise' AS label, 'maitr' AS name, 2 as width, maitr as value FROM maitrise where vmaitr=4;
     SELECT TRUE as required, 'Agent(s) concerné(s)' AS label, 'agent[]' AS name, 'select' as type, 6 as width, TRUE as multiple, TRUE as dropdown, 'Choisir' as empty_option, json_group_array(json_object("label" , categorie, "value", id)) as options FROM agent ORDER BY categorie ASC;

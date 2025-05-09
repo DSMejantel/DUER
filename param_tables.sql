@@ -44,13 +44,13 @@ select
     'Significative' as align_center,
     'Grave' as align_center,
     'Critique' as align_center,
-        'Fréquence' as align_right,
+        'Probabilité' as align_right,
     TRUE    as hover,
     TRUE    as striped_rows,
     TRUE as border,
     TRUE    as small;
 select 
-    freq as Fréquence,
+    freq as Probabilité,
     '[
     ![](/icons/alert-square-'||(SELECT seuils.color FROM seuils WHERE ROUND((vfreq*5*(SELECT vgrav FROM gravite WHERE id=1)*(:maitrise)/4))>smin and ROUND((vfreq*5*(SELECT vgrav FROM gravite WHERE id=1)*(:maitrise)/4))<=smax)||'.svg)](risque.sql "'||ROUND((vfreq*5*(SELECT vgrav FROM gravite WHERE id=1)*(:maitrise)/4))||'/100")' as Mineure,
     '[
