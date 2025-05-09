@@ -15,7 +15,7 @@ select
 select 
     lieu as title, 4 as size,
     '[![Risque](/icons/circle-plus.svg)](risque_ajout.sql?id='||unite.id||' "Ajouter") Ajouter un risque'||CHAR(10) || CHAR(10)  as description_md,
-    group_concat('[!['||description||'](/icons/alert-square-'||risque.color||'.svg)](risque_fiche.sql?id='||risque.id||' "'||risque.score||'/100")[!['||description||'](/icons/files.svg)](risque_fiche.sql?id='||risque.id||' "'||description||'")'||risques.nature,  CHAR(10) || CHAR(10) ORDER BY score DESC) as description_md,
+    group_concat('[!['||description||'](/icons/alert-square-'||risque.color||'.svg)](risque_fiche.sql?id='||risque.id||' "'||risque.score||'/100")[!['||description||']('||(CASE WHEN EXISTS (SELECT risque.id FROM actions WHERE risque.id = actions.risque_id) THEN '/icons/file-power.svg' ELSE '/icons/files.svg' END)||')](risque_fiche.sql?id='||risque.id||' "'||description||'")'||risques.nature,  CHAR(10) || CHAR(10) ORDER BY score DESC) as description_md,
 
     'unite_tableau.sql' as link,
     'Détails'     as button_text
