@@ -30,9 +30,9 @@ select
     4 as size,
     'Évaluation' as title,
     JSON('{"icon":"files","color":"black","description":"Description : '||description||'"}') as item,
-    JSON('{"icon":"clock-hour-5","color":"'||(CASE WHEN gravite=1 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Gravité : '||grav||'"}') as item,
+    JSON('{"icon":"ambulance","color":"'||(CASE WHEN gravite=1 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Gravité : '||grav||'"}') as item,
     JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
-    JSON('{"icon":"scale","color":"'||(CASE WHEN maitrise=1 THEN 'green' WHEN maitrise=2 THEN 'yellow' WHEN maitrise=3 THEN 'orange' ELSE 'red' END)||'","description":"Maîtrise : '||maitr||'"}') as item,
+    JSON('{"icon":"brand-speedtest","color":"'||(CASE WHEN maitrise=1 THEN 'green' WHEN maitrise=2 THEN 'yellow' WHEN maitrise=3 THEN 'orange' ELSE 'red' END)||'","description":"Maîtrise : '||maitr||'"}') as item,
     color               as button_color,
     'risque_fiche.sql?id='||$id||'&edit=1' as link,
     'Modifier'     as button_text
