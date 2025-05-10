@@ -173,6 +173,9 @@ END as Fin,
     ![](../icons/pencil.svg)
 ](action_edit.sql?id='||$id||'&fiche='||id||')
 [
+    ![](../icons/trash.svg)
+](action_delete.sql?id='||$id||'&fiche='||id||')
+[
     ![](../icons/eye.svg)
 ](action_view.sql?id='||$id||'&fiche='||id||')' as Actions
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE risque_id=$id;
