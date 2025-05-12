@@ -28,9 +28,12 @@ select 'divider' as component,
 SELECT 
     'table' as component,
     'Aucune information à afficher pour le moment' as empty_description,
+    'Description'  as markdown,
     'État' as markdown,
     'Fin' as markdown,
     'Éditer' as markdown,
+    'Rappel' as markdown,
+    'Rappel' as align_center,
     'Risque' as markdown,
     'Agents' as markdown,
     TRUE    as hover,
@@ -58,6 +61,14 @@ ELSE '[
     ![](/icons/square.svg)
 ](/avancement/ferme.sql?id='||actions.id||'&risque='||actions.risque_id||')' 
 END as Fin,
+    CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
+    THEN '[
+    ![](/icons/bell.svg)
+]()' 
+    WHEN rappel=1 and edition<datetime(date('now','-365 day')) 
+    THEN '[
+    ![](/icons/bell-ringing.svg)
+]()' END as Rappel,
     '[
     ![](/icons/eye.svg)
 ](risque_fiche.sql?id='||actions.risque_id||' "Voir la fiche risque")

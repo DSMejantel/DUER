@@ -10,32 +10,25 @@ sqlpage.read_file_as_text('index.json')  AS properties where $group_id=1;
 SELECT 'dynamic' AS component,
 sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
 
-
 --Choix
 SELECT 
     'form' as component,
     TRUE   as auto_submit;
 SELECT 
     'select'    as type,
-    'Unité de travail :' AS label, 'ut' AS name, 'Choisir' as empty_option, json_group_array(json_object("label" , lieu, "value",  id)) as options FROM (select * FROM unite ORDER BY lieu ASC);
+    'Alertes :' AS label, 'info' AS name, 'Choisir' as empty_option,  '[{"label": "En retard", "value": 1}, {"label": "À suivre", "value": 2}, {"label": "En cours", "value": 3}]' as options;
 
--- Titre
-select 'divider' as component,
-     'Fiches-actions pour : '||lieu as contents
-     FROM unite WHERE id=:ut;  
-
--- Résultat
+--Tableau
 SELECT 
     'table' as component,
-    'Aucune information à afficher pour le moment' as empty_description,
     'Description'  as markdown,
     'État' as markdown,
     'Fin' as markdown,
     'Éditer' as markdown,
+    'Risque' as markdown,
     'Rappel' as markdown,
     'Rappel' as align_center,
-    'Risque' as markdown,
-    'Agents' as markdown,
+    'Aucune action correspondante à votre recherche' as empty_description,
     TRUE    as hover,
     TRUE    as striped_rows,
     TRUE    as small,
@@ -43,23 +36,21 @@ SELECT
 SELECT
     actions.id as _sqlpage_id,
     actions.creation as Date,
-    --lieu as Unité,
     titre as Titre,
     actions.description as Description,
-    group_concat(categorie, CHAR(10)||CHAR(10)) as Agents,
     (SELECT '[
-    ![](/icons/alert-square-'||risque.color||'.svg)](risque.sql "'||score||'/100")' FROM risque WHERE risque.id=actions.risque_id) as Risque,
+    ![](/icons/alert-square-'||risque.color||'.svg)](risque.sql "'||risque.score||'/'||(gravite*frequence*5)||'")' FROM risque WHERE risque.id=actions.risque_id) as Risque,
     SUBSTR(prenom, 1, 1) ||'. '||nom as Responsable,
     '[
     ![](/icons/percentage-'||avancement||'.svg)]()
      ' as État,
     CASE WHEN etat=1
     THEN '[
-    ![](/icons/select.svg)
-](/avancement/ouvert.sql?id='||actions.id||'&risque='||actions.risque_id||')' 
+    ![](./icons/select.svg)
+](/avancement/ouvert.sql?id='||actions.id||'&risque='||risque_id||')' 
 ELSE '[
-    ![](/icons/square.svg)
-](/avancement/ferme.sql?id='||actions.id||'&risque='||actions.risque_id||')' 
+    ![](./icons/square.svg)
+](/avancement/ferme.sql?id='||actions.id||'&risque='||risque_id||')' 
 END as Fin,
     CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
     THEN '[
@@ -71,8 +62,7 @@ END as Fin,
 ]()' END as Rappel,
     '[
     ![](/icons/eye.svg)
-](risque_fiche.sql?id='||actions.risque_id||' "Voir la fiche risque")
-    [
-    ![](/icons/pencil.svg)
-](action_edit.sql?id='||actions.id||'&risque='||actions.risque_id||' "Éditer")' as Éditer
-    FROM actions LEFT JOIN user_info on actions.responsable_id=user_info.username LEFT JOIN risque on actions.risque_id=risque.id  LEFT JOIN unite on risque.unite_id=unite.id LEFT JOIN risque_agent on risque_agent.risque_id=risque.id LEFT JOIN agent on agent.id=risque_agent.agent_id WHERE unite.id=$ut GROUP BY actions.id;
+](risque_fiche.sql?id='||actions.risque_id||' "Voir la fiche risque")[
+    ![](../icons/pencil.svg)
+](action_edit.sql?id='||risque_id||'&fiche='||actions.id||')' as Éditer
+    FROM actions LEFT JOIN user_info on actions.responsable_id=user_info.username LEFT JOIN risque on actions.risque_id=risque.id WHERE (rappel=1 and edition<datetime(date('now','-365 day')) and $info=1) OR (rappel=1 and edition>datetime(date('now','-365 day')) and $info=2)OR (coalesce(rappel,0)=0 and avancement<100 and $info=3);

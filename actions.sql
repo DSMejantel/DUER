@@ -20,6 +20,8 @@ SELECT
     'Fin' as markdown,
     'Éditer' as markdown,
     'Risque' as markdown,
+    'Rappel' as markdown,
+    'Rappel' as align_center,
     TRUE    as hover,
     TRUE    as striped_rows,
     TRUE    as small,
@@ -30,7 +32,7 @@ SELECT
     titre as Titre,
     actions.description as Description,
     (SELECT '[
-    ![](/icons/alert-square-'||risque.color||'.svg)](risque.sql "'||risque.score||'/100")' FROM risque WHERE risque.id=actions.risque_id) as Risque,
+    ![](/icons/alert-square-'||risque.color||'.svg)](risque.sql "'||risque.score||'/'||(gravite*frequence*5)||'")' FROM risque WHERE risque.id=actions.risque_id) as Risque,
     SUBSTR(prenom, 1, 1) ||'. '||nom as Responsable,
     '[
     ![](/icons/percentage-'||avancement||'.svg)]()
@@ -43,6 +45,14 @@ ELSE '[
     ![](./icons/square.svg)
 ](/avancement/ferme.sql?id='||actions.id||'&risque='||risque_id||')' 
 END as Fin,
+    CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
+    THEN '[
+    ![](/icons/bell.svg)
+]()' 
+    WHEN rappel=1 and edition<datetime(date('now','-365 day')) 
+    THEN '[
+    ![](/icons/bell-ringing.svg)
+]()' END as Rappel,
     '[
     ![](/icons/eye.svg)
 ](risque_fiche.sql?id='||actions.risque_id||' "Voir la fiche risque")[

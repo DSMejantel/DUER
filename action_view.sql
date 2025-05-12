@@ -31,7 +31,7 @@ select
     'Évaluation' as title,
     JSON('{"icon":"files","color":"black","description":"Description : '||description||'"}') as item,
     JSON('{"icon":"ambulance","color":"'||(CASE WHEN gravite=1 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Gravité : '||grav||'"}') as item,
-    JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
+    JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN frequence=2 THEN 'yellow' WHEN frequence=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
     JSON('{"icon":"brand-speedtest","color":"'||(CASE WHEN maitrise=1 THEN 'green' WHEN maitrise=2 THEN 'yellow' WHEN maitrise=3 THEN 'orange' ELSE 'red' END)||'","description":"Maîtrise : '||maitr||'"}') as item,
     color               as button_color,
     'risque_fiche.sql?id='||$id||'&edit=1' as link,
@@ -47,7 +47,7 @@ select
     color               as icon_color,
     color               as button_color,
     color               as value_color,
-    '/100'               as small_text
+    '/'||(gravite*frequence*5) as small_text
     FROM risque JOIN risques on risque.type_id=risques.id JOIN unite on risque.unite_id=unite.id WHERE risque.id=$id;
 
 SELECT 
@@ -56,6 +56,8 @@ SELECT
     'Fin' as markdown,
     'Actions' as markdown,
     'Description' as markdown,
+    'Rappel' as markdown,
+    'Rappel' as align_center,
     TRUE    as small;
 SELECT
     creation as Date,
@@ -82,9 +84,22 @@ END as Fin,
 ](action_edit.sql?id='||$id||'&fiche='||id||')
 [
     ![](../icons/files.svg)
-](risque_fiche.sql?id='||$id||')' as Actions
+](risque_fiche.sql?id='||$id||')' as Actions,
+    CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
+    THEN '[
+    ![](/icons/bell.svg)
+]()' 
+    WHEN rappel=1 and edition<datetime(date('now','-365 day')) 
+    THEN '[
+    ![](/icons/bell-ringing.svg)
+]()' END as Rappel
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$fiche;
     
+select 'text' as component;
+select
+    TRUE as italics,
+    'Dernière modification le : '||strftime('%d/%m/%Y',edition) as contents
+    FROM actions WHERE id=$fiche;
 select 'text' as component,
     true as article,
     description as contents_md

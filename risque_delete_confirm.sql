@@ -5,10 +5,11 @@ SELECT 'redirect' AS component,
 
 
 --Mise à jour de la fiche action
-UPDATE actions SET titre=:titre, description=:description, responsable_id=:resp, avancement=:av, etat=coalesce(:ach,0), creation=:creation, edition=date('now'), rappel=coalesce(:rappel,0) WHERE id=$fiche
+DELETE FROM risque_agent WHERE risque_id=$risque;
+DELETE FROM risque WHERE id=$risque
 
 RETURNING
 'redirect' as component,
-'risque_fiche.sql?id='||$id as link;
+'unite_tableau.sql?unite='||$unite as link;
 
 

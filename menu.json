@@ -20,6 +20,7 @@
         {"title": "Risques", "link": "/risque.sql"},
          {"title": "Actions", "submenu": [
             {"link": "/actions.sql", "title": "Liste globale"},
+            {"link": "/actions_alerte.sql", "title": "en retard"},
             {"link": "/actions_responsables.sql", "title": "par responsable"},
             {"link": "/actions_agents.sql", "title": "par agent"},
             {"link": "/actions_unites.sql", "title": "par unité"}

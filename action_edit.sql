@@ -47,7 +47,7 @@ select
     color               as icon_color,
     color               as button_color,
     color               as value_color,
-    '/100'               as small_text
+    '/'||(gravite*frequence*5) as small_text
     FROM risque JOIN risques on risque.type_id=risques.id JOIN unite on risque.unite_id=unite.id WHERE risque.id=$id;
 
 SELECT 
@@ -55,6 +55,8 @@ SELECT
     'État' as markdown,
     'Fin' as markdown,
     'Description' as markdown,
+    'Rappel' as markdown,
+    'Rappel' as align_center,
     TRUE    as small;
 SELECT
     creation as Date,
@@ -71,7 +73,15 @@ SELECT
 ELSE '[
     ![](./icons/square.svg)
 ]()' 
-END as Fin
+END as Fin,
+    CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
+    THEN '[
+    ![](/icons/bell.svg)
+]()' 
+    WHEN rappel=1 and edition<datetime(date('now','-365 day')) 
+    THEN '[
+    ![](/icons/bell-ringing.svg)
+]()' END as Rappel
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE id=$fiche;
     
 -- formulaire modification fiche action
@@ -84,6 +94,7 @@ SELECT
 SELECT  TRUE as required, 'Date' AS label, 'creation' AS name, 'date' as type, (select creation FROM actions WHERE id=$fiche) as value, 3 as width;
     SELECT TRUE as required, 'titre' as name, 'Titre' as label, (select titre FROM actions WHERE id=$fiche) as value, 9 as width;
     SELECT TRUE as required, 'description' as name, 'Description' as label, 'textarea' as type, (select description FROM actions WHERE id=$fiche) as value, 12 as width;
-    SELECT TRUE as required, 'Responsable' AS label, 'resp' AS name, 'select' as type, 4 as width, (SELECT responsable_id FROM actions WHERE id=$fiche) as value, json_group_array(json_object("label" , prenom||' '||nom, "value", username )) as options FROM (select * FROM user_info WHERE username<>'duer_admin' ORDER BY nom ASC);
-    SELECT TRUE as required, 'Avancement' AS label, 'av' AS name, 'select' as type, 3 as width, (select avancement FROM actions WHERE id=$fiche) as value, '[{"label": "0 %", "value": 0}, {"label": "10 %", "value": 10}, {"label": "20 %", "value": 20},{"label": "30 %", "value": 30}, {"label": "40 %", "value": 40}, {"label": "50 %", "value": 50}, {"label": "60 %", "value": 60}, {"label": "70 %", "value": 70},{"label": "80 %", "value": 80}, {"label": "90 %", "value": 90}, {"label": "100 %", "value": 100}]'  as options;
-    SELECT 'Achèvement' AS label, 'ach' AS name, etat=1 as checked, 1 as value,2 as width, 'checkbox' as type FROM actions WHERE id=$fiche;  
+    SELECT TRUE as required, 'Responsable' AS label, 'resp' AS name, 'select' as type, 3 as width, (SELECT responsable_id FROM actions WHERE id=$fiche) as value, json_group_array(json_object("label" , prenom||' '||nom, "value", username )) as options FROM (select * FROM user_info WHERE username<>'duer_admin' ORDER BY nom ASC);
+    SELECT TRUE as required, 'Avancement' AS label, 'av' AS name, 'select' as type, 2 as width, (select avancement FROM actions WHERE id=$fiche) as value, '[{"label": "0 %", "value": 0}, {"label": "10 %", "value": 10}, {"label": "20 %", "value": 20},{"label": "30 %", "value": 30}, {"label": "40 %", "value": 40}, {"label": "50 %", "value": 50}, {"label": "60 %", "value": 60}, {"label": "70 %", "value": 70},{"label": "80 %", "value": 80}, {"label": "90 %", "value": 90}, {"label": "100 %", "value": 100}]'  as options;
+    SELECT 'Achèvement' AS label, 'ach' AS name, etat=1 as checked, 1 as value, 2 as width, 'checkbox' as type FROM actions WHERE id=$fiche;  
+    SELECT 'Rappel' AS label, 'rappel' AS name, rappel=1 as checked, 1 as value, 2 as width, 'checkbox' as type FROM actions WHERE id=$fiche;  

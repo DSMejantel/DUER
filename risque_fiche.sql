@@ -12,12 +12,12 @@ sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
 
 -- Calculs suite à réévaluation du risque
 UPDATE risque SET maitrise=:maitr WHERE risque.id=$id and :maj=2;
-UPDATE risque SET score=gravite*frequence*5/4*maitrise WHERE risque.id=$id and :maj=2;
+UPDATE risque SET score=(gravite*frequence*5*maitrise/4) WHERE risque.id=$id and :maj=2;
 SET score=(SELECT score FROM risque WHERE risque.id=$id and :maj=2);
 UPDATE risque SET color = (SELECT color FROM seuils WHERE $score>smin and $score<=smax) WHERE risque.id=$id and :maj=2;
 -- Calculs suite à mise à jour
 UPDATE risque SET type_id=:type, description=:description, gravite=:grav, frequence=:freq WHERE id=$id and :edit=0;
-UPDATE risque SET score=gravite*frequence*5/4*maitrise WHERE risque.id=$id and :edit=0;
+UPDATE risque SET score=(gravite*frequence*5*maitrise/4) WHERE risque.id=$id and :edit=0;
 SET score=(SELECT score FROM risque WHERE risque.id=$id and :edit=0);
 UPDATE risque SET color = (SELECT color FROM seuils WHERE $score>=smin and $score<=smax) WHERE risque.id=$id and :edit=0;
 DELETE FROM risque_agent WHERE risque_id=$id  and :edit=0;
@@ -45,7 +45,7 @@ select
     'Évaluation' as title,
     JSON('{"icon":"files","color":"black","description":"Description : '||description||'"}') as item,
     JSON('{"icon":"ambulance","color":"'||(CASE WHEN gravite=1 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Gravité : '||grav||'"}') as item,
-    JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN gravite=2 THEN 'yellow' WHEN gravite=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
+    JSON('{"icon":"activity","color":"'||(CASE WHEN frequence<2 THEN 'green' WHEN frequence=2 THEN 'yellow' WHEN frequence=3 THEN 'orange' ELSE 'red' END)||'","description":"Probabilité : '||freq||'"}') as item,
     JSON('{"icon":"brand-speedtest","color":"'||(CASE WHEN maitrise=1 THEN 'green' WHEN maitrise=2 THEN 'yellow' WHEN maitrise=3 THEN 'orange' ELSE 'red' END)||'","description":"Maîtrise : '||maitr||'"}') as item,
     --'Description : '||description as item,
     --'Gravité : '||grav as item,
@@ -65,7 +65,7 @@ select
     color               as icon_color,
     color               as button_color,
     color               as value_color,
-    '/100'               as small_text
+    '/'||(gravite*frequence*5) as small_text
     FROM risque JOIN risques on risque.type_id=risques.id JOIN unite on risque.unite_id=unite.id WHERE risque.id=$id;
 
 /*
@@ -143,6 +143,8 @@ SELECT
     'Fin' as markdown,
     'Actions' as markdown,
     'Description' as markdown,
+    'Rappel' as markdown,
+    'Rappel' as align_center,
     'Aucune fiche saisie' as empty_description,
     TRUE    as hover,
     TRUE    as striped_rows,
@@ -177,7 +179,15 @@ END as Fin,
 ](action_delete.sql?id='||$id||'&fiche='||id||')
 [
     ![](../icons/eye.svg)
-](action_view.sql?id='||$id||'&fiche='||id||')' as Actions
+](action_view.sql?id='||$id||'&fiche='||id||')' as Actions,
+    CASE WHEN rappel=1  and edition>datetime(date('now','-365 day'))
+    THEN '[
+    ![](/icons/bell.svg)
+]()' 
+    WHEN rappel=1 and edition<datetime(date('now','-365 day')) 
+    THEN '[
+    ![](/icons/bell-ringing.svg)
+]()' END as Rappel
     FROM actions JOIN user_info on actions.responsable_id=user_info.username WHERE risque_id=$id;
     
     
